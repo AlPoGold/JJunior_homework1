@@ -3,8 +3,6 @@ package org.example;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.Period;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
