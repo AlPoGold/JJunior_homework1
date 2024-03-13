@@ -55,7 +55,7 @@ public class App {
 
         sumSalaryInDept.forEach((key, value) -> System.out.println(key + "------>" + value));
 
-        Departament dept = sumSalaryInDept.entrySet().stream().max(Map.Entry.comparingByValue()).orElseThrow(IllegalStateException::new).getKey();
+        Departament dept = topDepartment(sumSalaryInDept);
         System.out.println("The highest summary of salaries in "+ dept.getName());
 
         System.out.println("-------4 TASK--------------"+"\n");
@@ -94,6 +94,11 @@ public class App {
                summingDouble(Person::getSalary)
 
         ));
+
+    }
+
+    public static Departament topDepartment(Map<Departament, Double> map){
+        return map.entrySet().stream().max(Map.Entry.comparingByValue()).orElseThrow(IllegalStateException::new).getKey();
 
     }
 
