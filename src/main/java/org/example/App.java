@@ -13,19 +13,31 @@ public class App {
         List<Person> employees = Person.generatePersons(departaments, 30);
 
         employees.forEach(System.out::println);
+        /**
+         * Вывести на консоль отсортированные (по алфавиту) имена персонов
+         */
 
         System.out.println("-------1 TASK--------------");
+
         printNamesOrdered(employees);
         System.out.println("-------1 TASK--------------"+"\n");
 
-
+    /**
+     * В каждом департаменте найти самого взрослого сотрудника.
+     *    * Вывести на консоль мапипнг department -> personName
+     *    * Map<Department, Person>
+     */
 
         System.out.println("-------2 TASK--------------");
         Map<Departament, Person> oldestPersons = printDepartmentOldestPerson(employees);
-        for (Departament key: oldestPersons.keySet()){
-            System.out.printf("%s %s\n", key.getName(),oldestPersons.get(key).toString());
-        }
+        oldestPersons.forEach((key, value) -> System.out.printf("%s %s\n", key.getName(),value.toString()));
+
         System.out.println("-------2 TASK--------------"+"\n");
+
+        /**
+         *    * Найти 10 первых сотрудников, младше 30 лет, у которых зарплата выше 50_000
+         *
+         */
 
         System.out.println("-------3 TASK--------------");
         List<Person> first10youngEmp = findFirstPersons(employees);
@@ -34,16 +46,16 @@ public class App {
         System.out.println("-------3 TASK--------------"+"\n");
 
 
-
+        /**
+         * Найти депаратмент, чья суммарная зарплата всех сотрудников максимальна
+         */
         System.out.println("-------4 TASK--------------");
 
         Map<Departament, Double> sumSalaryInDept = findTopDepartment(employees);
 
-        for (Map.Entry dept: sumSalaryInDept.entrySet()
-             ) {
-            System.out.println(dept.getKey() + "------>" + dept.getValue() );
-        }
-        Departament dept = sumSalaryInDept.entrySet().stream().max(Map.Entry.comparingByValue()).get().getKey();
+        sumSalaryInDept.forEach((key, value) -> System.out.println(key + "------>" + value));
+
+        Departament dept = sumSalaryInDept.entrySet().stream().max(Map.Entry.comparingByValue()).orElseThrow(IllegalStateException::new).getKey();
         System.out.println("The highest summary of salaries in "+ dept.getName());
 
         System.out.println("-------4 TASK--------------"+"\n");
@@ -61,7 +73,7 @@ public class App {
                .collect(Collectors.groupingBy(Person::getDepartament,
                     reducing(BinaryOperator.maxBy(comparator))
                )).entrySet().forEach(x-> {
-                   Person max = x.getValue().get();
+                   Person max = x.getValue().orElse(null);
                    map.put(x.getKey(), max);
                });
        return map;
@@ -70,8 +82,7 @@ public class App {
 
     public static List<Person> findFirstPersons(List<Person> persons) {
         return persons.stream()
-                .filter(x -> x.getSalary() > 50_000)
-                .filter(x -> Person.getAge(x.getBirthDate()) < 30)
+                .filter(x -> x.getSalary() > 50_000 && Person.getAge(x.getBirthDate()) < 30)
                 .limit(10)
                 .toList();
     }
